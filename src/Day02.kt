@@ -51,9 +51,9 @@ enum class RockPaperScissors(val value: Int) {
 }
 
 fun main() {
-    fun List<String>.gather(): List<List<String>> = map { it.split(" ") }
+    fun List<String>.splitInput(): List<List<String>> = map { it.split(" ") }
 
-    fun List<List<String>>.calculateRows(
+    fun List<List<String>>.calculateRockPaperScissorsScore(
         makeMyChoice: (opponent: RockPaperScissors, input: String) -> RockPaperScissors
     ): Int {
         val mapped = map {
@@ -67,10 +67,15 @@ fun main() {
         return mapped.sumOf { it }
     }
 
-    fun part1(input: List<String>): Int = input.gather().calculateRows { _, it -> RockPaperScissors.parse(it) }
+    fun part1(input: List<String>): Int =
+        input.splitInput()
+            .calculateRockPaperScissorsScore { _, myChoice -> RockPaperScissors.parse(myChoice) }
 
     fun part2(input: List<String>): Int =
-        input.gather().calculateRows { oc, it -> RockPaperScissors.parse(Outcome.parse(it), oc) }
+        input.splitInput()
+            .calculateRockPaperScissorsScore { opponentChoice, desiredOutcome ->
+                RockPaperScissors.parse(Outcome.parse(desiredOutcome), opponentChoice)
+            }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day02_test")
